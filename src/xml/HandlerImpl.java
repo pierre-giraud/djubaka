@@ -112,6 +112,7 @@ public class HandlerImpl extends DefaultHandler implements ContentHandler, Error
             case "playlist":
                 try {
                     builder.startPlaylist();
+                    builder.setPlayListName(atts.getValue(0));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -20,7 +20,7 @@ public class StdMediaBuilder implements MediaBuilder {
     private Deque<Playlist> playlistStack;
 
     public StdMediaBuilder(){
-        playlist = new Playlist();
+        //playlist = new Playlist();
         playlistStack = new ArrayDeque<>();
         state = BuilderState.NONE;
     }
@@ -36,7 +36,8 @@ public class StdMediaBuilder implements MediaBuilder {
     @Override
     public void startPlaylist() throws InvalidBuilderOperationException {
         if (state != BuilderState.NONE) throw new InvalidBuilderOperationException("The previous media is not finished");
-        playlistStack.addFirst(new Playlist());
+        if (playlist == null) playlist = new Playlist();
+        else playlistStack.addFirst(new Playlist());
     }
 
     @Override
@@ -45,6 +46,16 @@ public class StdMediaBuilder implements MediaBuilder {
         state = BuilderState.VIDEO;
         duration = -1;
         name = artist = resolution = null;
+    }
+
+    @Override
+    public void setPlayListName(String name) throws InvalidBuilderOperationException {
+        if (playlistStack.size() == 0){
+            if (playlist.getName() != null) throw new InvalidBuilderOperationException("The main playlist is already named");
+        } else {
+            if (playlistStack.getFirst().getName() != null) throw new InvalidBuilderOperationException("This list is already named");
+            playlistStack.getFirst().setName(name);
+        }
     }
 
     @Override
@@ -88,8 +99,14 @@ public class StdMediaBuilder implements MediaBuilder {
 
     @Override
     public void stopPlaylist() throws InvalidBuilderOperationException {
-        if (playlistStack.size() == 0) throw new InvalidBuilderOperationException("There is no playlist to add");
-        playlist.add(playlistStack.removeFirst());
+        if (playlist != null){
+            if (playlistStack.size() != 0){
+                if (playlistStack.getFirst().getName() == null) throw new InvalidBuilderOperationException("This playlist does not have any name");
+                playlist.add(playlistStack.removeFirst());
+            } else {
+                if (playlist.getName() == null) throw new InvalidBuilderOperationException("The main playlist does not have any name");
+            }
+        } else throw new InvalidBuilderOperationException("There is no playlist to stop");
     }
 
     @Override

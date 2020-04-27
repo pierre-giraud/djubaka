@@ -1,7 +1,7 @@
 package medias;
 
 import builders.MediaBuilder;
-import exceptions.BadMediaFormatException;
+import exceptions.BadMediaTypeException;
 import exceptions.InvalidBuilderOperationException;
 
 import java.io.BufferedReader;
@@ -40,8 +40,8 @@ public class StdMediaLoader implements MediaLoader {
                 builder.stopVideo();
             } else {
                 try {
-                    throw new BadMediaFormatException("Format de fichier Media incompatible");
-                } catch (BadMediaFormatException e){
+                    throw new BadMediaTypeException("Incorrect media type");
+                } catch (BadMediaTypeException e){
                     e.printStackTrace();
                 }
             }

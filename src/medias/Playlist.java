@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Playlist implements Media {
 
+    private String name;
     private List<Media> children;
 
     public Playlist(){
@@ -25,6 +26,14 @@ public class Playlist implements Media {
         return children.get(num);
     }
     public List<Media> getChildren() { return children; }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public void accept(MediaVisitor mv) {

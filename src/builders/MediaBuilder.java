@@ -8,6 +8,7 @@ public interface MediaBuilder {
     void startPlaylist() throws InvalidBuilderOperationException;
     void startVideo() throws InvalidBuilderOperationException;
 
+    void setPlayListName(String name) throws InvalidBuilderOperationException;
     void setDuration(int duration) throws InvalidBuilderOperationException;
     void setName(String name) throws InvalidBuilderOperationException;
     void setArtist(String artist) throws InvalidBuilderOperationException;
