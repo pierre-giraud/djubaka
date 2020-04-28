@@ -19,5 +19,5 @@ public interface MediaBuilder {
     void stopVideo() throws InvalidBuilderOperationException;
 
     ListMedia getList();
-    void setList(ListMedia l);
+    void resetList();
 }

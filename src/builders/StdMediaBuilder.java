@@ -126,7 +126,7 @@ public class StdMediaBuilder implements MediaBuilder {
     }
 
     @Override
-    public void setList(ListMedia l) {
-        this.listMedia = l;
+    public void resetList() {
+        this.listMedia = null;
     }
 }

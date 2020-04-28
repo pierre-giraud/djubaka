@@ -33,8 +33,8 @@ public class XmlMediaSaverVisitor implements MediaVisitor {
 
     @Override
     public void visitList(ListMedia p) {
-        stream.append("<playlist name=\"").append(p.getName()).append("\">\n");
+        stream.append("<list name=\"").append(p.getName()).append("\">\n");
         for (Media m : p.getChildren()){ m.accept(this); }
-        stream.append("</playlist>\n");
+        stream.append("</list>\n");
     }
 }

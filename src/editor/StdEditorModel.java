@@ -34,7 +34,7 @@ public class StdEditorModel implements EditorModel {
         fileLoader.load(filename, builder);
         listMedia = builder.getList();
         currentList = listMedia;
-        builder.setList(null);
+        builder.resetList();
     }
 
     @Override
@@ -46,19 +46,22 @@ public class StdEditorModel implements EditorModel {
     public void importMedia(String filename, MediaBuilder builder) {
         stdLoader.load(filename, builder);
         currentList.add(builder.getList().getChild(0));
-        builder.setList(null);
+        builder.resetList();
     }
 
     @Override
-    public void importFolderMedia(String folder) {
-
+    public void importFolderMedia(String folder, MediaBuilder builder) {
+        // Pour chaque fichiers du dossier, on récupe le nom
+        // Avec le nom tu fais : stdLoader.load(nom, builder);
+        // Ajout à la liste de média courante : currentList.add(builder.getList().getChild(0));
+        // A chaque boucle, tu remet la liste du builder à null : builder.resetList();
     }
 
     @Override
     public void importList(String filename, MediaBuilder builder) {
         fileLoader.load(filename, builder);
         listMedia.add(builder.getList());
-        builder.setList(null);
+        builder.resetList();
     }
 
     @Override
