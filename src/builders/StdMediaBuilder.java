@@ -1,9 +1,8 @@
 package builders;
 
 import exceptions.InvalidBuilderOperationException;
-import medias.Media;
 import medias.Music;
-import medias.Playlist;
+import medias.ListMedia;
 import medias.Video;
 
 import java.util.ArrayDeque;
@@ -16,12 +15,11 @@ public class StdMediaBuilder implements MediaBuilder {
     private String resolution;
 
     private BuilderState state;
-    private Playlist playlist;
-    private Deque<Playlist> playlistStack;
+    private ListMedia listMedia;
+    private Deque<ListMedia> listMediaStack;
 
     public StdMediaBuilder(){
-        //playlist = new Playlist();
-        playlistStack = new ArrayDeque<>();
+        listMediaStack = new ArrayDeque<>();
         state = BuilderState.NONE;
     }
 
@@ -34,10 +32,10 @@ public class StdMediaBuilder implements MediaBuilder {
     }
 
     @Override
-    public void startPlaylist() throws InvalidBuilderOperationException {
+    public void startList() throws InvalidBuilderOperationException {
         if (state != BuilderState.NONE) throw new InvalidBuilderOperationException("The previous media is not finished");
-        if (playlist == null) playlist = new Playlist();
-        else playlistStack.addFirst(new Playlist());
+        if (listMedia == null) listMedia = new ListMedia();
+        else listMediaStack.addFirst(new ListMedia());
     }
 
     @Override
@@ -49,12 +47,12 @@ public class StdMediaBuilder implements MediaBuilder {
     }
 
     @Override
-    public void setPlayListName(String name) throws InvalidBuilderOperationException {
-        if (playlistStack.size() == 0){
-            if (playlist.getName() != null) throw new InvalidBuilderOperationException("The main playlist is already named");
+    public void setListName(String name) throws InvalidBuilderOperationException {
+        if (listMediaStack.size() == 0){
+            if (listMedia.getName() != null) throw new InvalidBuilderOperationException("The main playlist is already named");
         } else {
-            if (playlistStack.getFirst().getName() != null) throw new InvalidBuilderOperationException("This list is already named");
-            playlistStack.getFirst().setName(name);
+            if (listMediaStack.getFirst().getName() != null) throw new InvalidBuilderOperationException("This list is already named");
+            listMediaStack.getFirst().setName(name);
         }
     }
 
@@ -91,20 +89,20 @@ public class StdMediaBuilder implements MediaBuilder {
 
         Music m = new Music(duration, name, artist);
 
-        if (playlistStack.size() != 0) playlistStack.getFirst().add(m);
-        else playlist.add(m);
+        if (listMediaStack.size() != 0) listMediaStack.getFirst().add(m);
+        else listMedia.add(m);
 
         state = BuilderState.NONE;
     }
 
     @Override
-    public void stopPlaylist() throws InvalidBuilderOperationException {
-        if (playlist != null){
-            if (playlistStack.size() != 0){
-                if (playlistStack.getFirst().getName() == null) throw new InvalidBuilderOperationException("This playlist does not have any name");
-                playlist.add(playlistStack.removeFirst());
+    public void stopList() throws InvalidBuilderOperationException {
+        if (listMedia != null){
+            if (listMediaStack.size() != 0){
+                if (listMediaStack.getFirst().getName() == null) throw new InvalidBuilderOperationException("This playlist does not have any name");
+                listMedia.add(listMediaStack.removeFirst());
             } else {
-                if (playlist.getName() == null) throw new InvalidBuilderOperationException("The main playlist does not have any name");
+                if (listMedia.getName() == null) throw new InvalidBuilderOperationException("The main playlist does not have any name");
             }
         } else throw new InvalidBuilderOperationException("There is no playlist to stop");
     }
@@ -116,14 +114,19 @@ public class StdMediaBuilder implements MediaBuilder {
 
         Video v = new Video(duration, name, resolution);
 
-        if (playlistStack.size() != 0) playlistStack.getFirst().add(v);
-        else playlist.add(v);
+        if (listMediaStack.size() != 0) listMediaStack.getFirst().add(v);
+        else listMedia.add(v);
 
         state = BuilderState.NONE;
     }
 
     @Override
-    public Media getPlaylist() {
-        return playlist;
+    public ListMedia getList() {
+        return listMedia;
+    }
+
+    @Override
+    public void setList(ListMedia l) {
+        this.listMedia = l;
     }
 }

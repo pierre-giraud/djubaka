@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StdMediaLoader implements MediaLoader {
+public class StdMediaLoader implements MediaLoader{
     @Override
     public void load(String filename, MediaBuilder builder) {
         File file = new File(filename);

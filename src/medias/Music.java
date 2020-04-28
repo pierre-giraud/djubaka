@@ -14,16 +14,8 @@ public class Music implements Media {
         this.artist = artist;
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
     public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
@@ -36,6 +28,16 @@ public class Music implements Media {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

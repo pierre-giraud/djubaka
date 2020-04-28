@@ -5,29 +5,21 @@ import visitors.MediaVisitor;
 public class Video implements Media {
 
     private int duration;
-    private String title;
+    private String name;
     private String resolution;
 
-    public Video(int duration, String title, String resolution) {
+    public Video(int duration, String name, String resolution) {
         this.duration = duration;
-        this.title = title;
+        this.name = name;
         this.resolution = resolution;
-    }
-
-    public int getDuration() {
-        return duration;
     }
 
     public void setDuration(int duration) {
         this.duration = duration;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getResolution() {
@@ -36,6 +28,16 @@ public class Video implements Media {
 
     public void setResolution(String resolution) {
         this.resolution = resolution;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
     }
 
     @Override

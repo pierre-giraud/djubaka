@@ -69,9 +69,9 @@ public class HandlerImpl extends DefaultHandler implements ContentHandler, Error
                     e.printStackTrace();
                 }
                 break;
-            case "playlist":
+            case "list":
                 try {
-                    builder.stopPlaylist();
+                    builder.stopList();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -109,10 +109,10 @@ public class HandlerImpl extends DefaultHandler implements ContentHandler, Error
                     e.printStackTrace();
                 }
                 break;
-            case "playlist":
+            case "list":
                 try {
-                    builder.startPlaylist();
-                    builder.setPlayListName(atts.getValue(0));
+                    builder.startList();
+                    builder.setListName(atts.getValue(0));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
