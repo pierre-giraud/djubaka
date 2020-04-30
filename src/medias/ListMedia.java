@@ -64,4 +64,9 @@ public class ListMedia implements Media {
     public void accept(MediaVisitor mv) {
         mv.visitList(this);
     }
+
+    @Override
+    public String toString() {
+        return name + " (" + getDuration() + " sec)";
+    }
 }

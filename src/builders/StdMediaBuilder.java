@@ -50,6 +50,7 @@ public class StdMediaBuilder implements MediaBuilder {
     public void setListName(String name) throws InvalidBuilderOperationException {
         if (listMediaStack.size() == 0){
             if (listMedia.getName() != null) throw new InvalidBuilderOperationException("The main playlist is already named");
+            listMedia.setName(name);
         } else {
             if (listMediaStack.getFirst().getName() != null) throw new InvalidBuilderOperationException("This list is already named");
             listMediaStack.getFirst().setName(name);

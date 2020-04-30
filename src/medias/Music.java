@@ -44,4 +44,9 @@ public class Music implements Media {
     public void accept(MediaVisitor mv) {
         mv.visitMusic(this);
     }
+
+    @Override
+    public String toString() {
+        return name + " by " + artist + " (" + duration + " sec)";
+    }
 }

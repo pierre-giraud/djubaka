@@ -44,4 +44,9 @@ public class Video implements Media {
     public void accept(MediaVisitor mv) {
         mv.visitVideo(this);
     }
+
+    @Override
+    public String toString() {
+        return name + " displayed in " + resolution + " (" + duration + " sec)";
+    }
 }
