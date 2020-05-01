@@ -2,6 +2,7 @@ package medias;
 
 import builders.MediaBuilder;
 import exceptions.BadMediaTypeException;
+import exceptions.InvalidBuilderOperationException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +24,10 @@ public class StdMediaLoader implements MediaLoader{
             data.add(line);
         }
 
-        if (filename.contains(".mta")) {
+        if (data.size() < 3 || hasNullInfo(data)) throw new InvalidBuilderOperationException("Cannot load : this file does not contain the minimum required information");
+
+        String ext = filename.substring(filename.length() - 4);
+        if (ext.equals(".mta")) {
             builder.startList();
             builder.setListName("none");
             builder.startMusic();
@@ -32,7 +36,7 @@ public class StdMediaLoader implements MediaLoader{
             builder.setArtist(data.get(2));
             builder.stopMusic();
             builder.stopList();
-        } else if (filename.contains(".mtv")){
+        } else if (ext.equals(".mtv")){
             builder.startList();
             builder.setListName("none");
             builder.startVideo();
@@ -44,5 +48,18 @@ public class StdMediaLoader implements MediaLoader{
         } else {
             throw new BadMediaTypeException("Incorrect media type");
         }
+    }
+
+    private boolean hasNullInfo(List<String> data) {
+        boolean bool = false;
+
+        for (int i = 0; i < 3; i++) {
+            if (data.get(i).equals("")){
+                bool = true;
+                break;
+            }
+        }
+
+        return bool;
     }
 }

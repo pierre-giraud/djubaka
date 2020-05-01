@@ -47,6 +47,6 @@ public class Music implements Media {
 
     @Override
     public String toString() {
-        return name + " by " + artist + " (" + duration + " sec)";
+        return "(Music) " + name + " [by " + artist + "] (" + duration + " SEC)";
     }
 }

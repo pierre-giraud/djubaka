@@ -128,6 +128,8 @@ public class StdMediaBuilder implements MediaBuilder {
 
     @Override
     public void resetList() {
-        this.listMedia = null;
+        listMedia = null;
+        state = BuilderState.NONE;
+        listMediaStack.clear();
     }
 }

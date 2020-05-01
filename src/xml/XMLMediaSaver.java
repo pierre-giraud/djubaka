@@ -16,8 +16,8 @@ public class XMLMediaSaver implements MediaSaver {
         MediaVisitor visitor = new XmlMediaSaverVisitor(stream);
 
         stream.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        stream.append("<!DOCTYPE playlist SYSTEM \".\\resources\\playlist.dtd\">\n");
-        stream.append("<playlist xmlns=\"http://www.univ-rouen.fr/playlist\">\n");
+        stream.append("<!DOCTYPE playlist SYSTEM \"resources/playlist.dtd\">\n");
+        stream.append("<playlist>\n");
 
         list.accept(visitor);
 

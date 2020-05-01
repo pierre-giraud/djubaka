@@ -47,6 +47,6 @@ public class Video implements Media {
 
     @Override
     public String toString() {
-        return name + " displayed in " + resolution + " (" + duration + " sec)";
+        return "(Video) " + name + " [displayed in " + resolution + "] (" + duration + " sec)";
     }
 }

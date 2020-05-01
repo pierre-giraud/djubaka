@@ -2,7 +2,6 @@ import builders.MediaBuilder;
 import builders.StdMediaBuilder;
 import editor.EditorModel;
 import editor.StdEditorModel;
-import medias.ListMedia;
 import medias.Media;
 import medias.StdMediaLoader;
 import xml.XMLMediaLoader;
@@ -14,11 +13,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public final class Editor {
+public class Editor {
 
     private EditorModel model;
     private MediaBuilder builder;
-    private final ChangeListener changeListener;
+    private ChangeListener changeListener;
 
     private BufferedReader consoleReader;
 
@@ -37,14 +36,6 @@ public final class Editor {
         consoleReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public EditorModel getModel() {
-        return model;
-    }
-
-    public void setModel(EditorModel model) {
-        this.model = model;
-    }
-
     private void run() throws IOException {
         String command = "";
 
@@ -54,17 +45,21 @@ public final class Editor {
             if (command.contains("create")){
                 createList(command);
             } else if (command.contains("load")){
-
+                loadList(command);
             } else if (command.contains("save")){
-
+                saveList(command);
             } else if (command.equals("list")) {
                 printCurrentList();
             } else if (command.contains("enter")){
                 enterSubList(command);
             } else if (command.equals("back")){
                 backToParentList();
-            } else if (command.matches("import media \".*\"")){
+            } else if (command.contains("import media")){
                 importMedia(command);
+            } else if(command.contains("import list")){
+                importList(command);
+            } else if(command.contains("import folder")) {
+                importFolder(command);
             } else if (command.equals("help")){
                 System.out.println(getHelpInfo());
             }
@@ -92,6 +87,52 @@ public final class Editor {
         model.createPlaylist(arg[1]);
     }
 
+    private void loadList(String command){
+        String[] arg;
+        if (command.matches("load \".*\"")){
+            arg = command.split("\"");
+        } else {
+            arg = command.split(" ");
+        }
+
+        if (arg.length < 2) {
+            System.out.println("ERROR : you have to give the name of a file");
+            return;
+        }
+
+        try {
+            model.getCurrentList();
+            System.out.println("Replacing current playlist ...");
+        } catch (NullPointerException ignored){}
+
+        try {
+            model.loadPlaylist(arg[1], builder);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void saveList(String command){
+        String[] arg;
+        if (command.matches("save \".*\"")){
+            arg = command.split("\"");
+        } else {
+            arg = command.split(" ");
+        }
+
+        if (arg.length < 2) {
+            System.out.println("ERROR : you have to give the name of a file");
+            return;
+        }
+
+        try {
+            model.savePlaylist(arg[1]);
+            System.out.println("Playlist saved");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void printCurrentList(){
         try {
             StringBuilder output = new StringBuilder("List : " + model.getCurrentList().getName());
@@ -99,10 +140,11 @@ public final class Editor {
             if (model.getCurrentList().getChildren().size() == 0) {
                 output.append(" (empty)");
             } else {
+                output.append("\n");
                 int n = 0;
 
                 for(Media m : model.getCurrentList().getChildren()){
-                    output.append("\t").append(n++).append(" : ").append(m.toString());
+                    output.append("\t").append(n++).append(" : ").append(m.toString()).append("\n");
                 }
             }
 
@@ -138,9 +180,87 @@ public final class Editor {
 
     private void importMedia(String command){
         try {
-            String[] arg = command.split("\"");
-            System.out.println(arg[0] + " - " + arg[1]);
-            model.importMedia(arg[1], builder);
+            String[] arg;
+            if (command.matches("import media \".*\"")){
+                arg = command.split("\"");
+
+                if (arg.length != 2) {
+                    System.out.println("ERROR : you have to give the media file to import");
+                    return;
+                }
+
+                System.out.println(arg[0] + " - " + arg[1]);
+                model.importMedia(arg[1], builder);
+            } else {
+                arg = command.split(" ");
+
+                if (arg.length != 3) {
+                    System.out.println("ERROR : you have to give the media file to import");
+                    return;
+                }
+
+                System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
+                model.importMedia(arg[2], builder);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void importFolder(String command){
+        try {
+            String[] arg;
+            if (command.matches("import folder \".*\"")){
+                arg = command.split("\"");
+
+                if (arg.length != 2) {
+                    System.out.println("ERROR : you have to give the media folder");
+                    return;
+                }
+
+                System.out.println(arg[0] + " - " + arg[1]);
+                model.importFolderMedia(arg[1], builder);
+            } else {
+                arg = command.split(" ");
+
+                if (arg.length != 3) {
+                    System.out.println("ERROR : you have to give the media folder");
+                    return;
+                }
+
+                System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
+                model.importFolderMedia(arg[2], builder);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void importList(String command){
+        try {
+            String[] arg;
+            if (command.matches("import list \".*\"")){
+                arg = command.split("\"");
+
+                if (arg.length != 2) {
+                    System.out.println("ERROR : you have to give the list file to import");
+                    return;
+                }
+
+                System.out.println(arg[0] + " - " + arg[1]);
+                model.importList(arg[1], builder);
+            } else {
+                arg = command.split(" ");
+
+                if (arg.length != 3) {
+                    System.out.println("ERROR : you have to give the list file to import");
+                    return;
+                }
+
+                System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
+                model.importList(arg[2], builder);
+            }
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -172,6 +292,14 @@ public final class Editor {
         help += " : Leave this program";
 
         return help;
+    }
+
+    public EditorModel getModel() {
+        return model;
+    }
+
+    public void setModel(EditorModel model) {
+        this.model = model;
     }
 
     public static void main(String[] args){

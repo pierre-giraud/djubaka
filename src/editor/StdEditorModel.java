@@ -1,6 +1,7 @@
 package editor;
 
 import builders.MediaBuilder;
+import exceptions.BadFileExtensionException;
 import exceptions.BadMediaTypeException;
 import medias.Media;
 import medias.MediaLoader;
@@ -10,6 +11,7 @@ import medias.MediaSaver;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+import java.io.File;
 
 public class StdEditorModel implements EditorModel {
 
@@ -41,6 +43,7 @@ public class StdEditorModel implements EditorModel {
 
     @Override
     public void loadPlaylist(String filename, MediaBuilder builder) throws Exception {
+        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
         fileLoader.load(filename, builder);
         listMedia = builder.getList();
         currentList = listMedia;
@@ -50,6 +53,7 @@ public class StdEditorModel implements EditorModel {
 
     @Override
     public void savePlaylist(String filename) throws Exception {
+        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
         saver.save(filename, listMedia);
     }
 
@@ -63,16 +67,30 @@ public class StdEditorModel implements EditorModel {
 
     @Override
     public void importFolderMedia(String folder, MediaBuilder builder) throws Exception {
-        // Pour chaque fichiers du dossier, on récupe le nom
-        // Avec le nom tu fais : stdLoader.load(nom, builder);
-        // Ajout à la liste de média courante : currentList.add(builder.getList().getChild(0));
-        // A chaque boucle, tu remet la liste du builder à null : builder.resetList();
+        if (currentList == null) throw new NullPointerException("Cannot import file : no list has been created");
+
+        File fold = new File(folder);
+        if (fold.listFiles() == null) throw new NullPointerException("This folder is empty or does not exist");
+
+        for (File entry : fold.listFiles()) {
+            if (entry.isDirectory()) {
+                importFolderMedia(entry.getPath(), builder);
+            } else {
+                try {
+                    importMedia(entry.getPath(), builder);
+                } catch (Exception e){
+                    System.out.println(e.getMessage() + " (" + entry.getPath() + ")");
+                    builder.resetList();
+                }
+            }
+        }
     }
 
     @Override
     public void importList(String filename, MediaBuilder builder) throws Exception {
+        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
         fileLoader.load(filename, builder);
-        listMedia.add(builder.getList());
+        currentList.add(builder.getList());
         builder.resetList();
     }
 
