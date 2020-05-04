@@ -1,7 +1,7 @@
-import medias.ListMedia;
-import medias.Media;
-import medias.Music;
-import medias.Video;
+import media.ListMedia;
+import media.Media;
+import media.StdMusic;
+import media.StdVideo;
 
 public class Test {
 
@@ -10,8 +10,8 @@ public class Test {
         list.setName("Origin");
         ListMedia currentList = list;
 
-        currentList.add(new Video(20, "Video 1", "1980x1080"));
-        currentList.add(new Video(20, "Video 2", "1980x1080"));
+        currentList.add(new StdVideo(20, "Video 1", "1980x1080"));
+        currentList.add(new StdVideo(20, "Video 2", "1980x1080"));
 
         System.out.println("Current list children : ");
         for (Media m : currentList.getChildren()) System.out.println("Durée : " + m.getDuration() + ", name = " + m.getName());
@@ -19,9 +19,9 @@ public class Test {
         ListMedia subList = new ListMedia();
         subList.setName("SubList");
 
-        subList.add(new Music(180, "Musique 1", "Quelqu'un"));
-        subList.add(new Music(180, "Musique 2", "Quelqu'un"));
-        subList.add(new Video(200, "Une vidéo", "1980x1080"));
+        subList.add(new StdMusic(180, "Musique 1", "Quelqu'un"));
+        subList.add(new StdMusic(180, "Musique 2", "Quelqu'un"));
+        subList.add(new StdVideo(200, "Une vidéo", "1980x1080"));
 
         currentList.add(subList);
 
@@ -39,7 +39,7 @@ public class Test {
 
         System.out.println("Current list children : ");
         System.out.println("Name : " + currentList.getName());
-        currentList.add(new Music(1, "Test music", "oui"));
+        currentList.add(new StdMusic(1, "Test music", "oui"));
         for (Media m : currentList.getChildren()) System.out.println("Durée : " + m.getDuration() + ", name = " + m.getName());
         System.out.println("Parent : ");
         for (Media m : currentList.getParent().getChildren()) System.out.println("Durée : " + m.getDuration() + ", name = " + m.getName());

@@ -1,16 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT playlist (music|video|list)*>
+<?file version="1.0" encoding="UTF-8"?>
+<!ELEMENT playlist (media|list)*>
 
-<!ELEMENT list (music|video|list)*>
+<!ELEMENT list (media|list)*>
     <!ATTLIST list name CDATA #REQUIRED>
 
-<!ELEMENT music (name,artist)>
-    <!ATTLIST music duration CDATA #REQUIRED>
-
-<!ELEMENT video (title,resolution)>
-    <!ATTLIST video duration CDATA #REQUIRED>
+<!ELEMENT media (name)>
+    <!ATTLIST media duration CDATA #REQUIRED>
 
 <!ELEMENT name (#PCDATA)>
-<!ELEMENT title (#PCDATA)>
-<!ELEMENT artist (#PCDATA)>
-<!ELEMENT resolution (#PCDATA)>

@@ -1,9 +1,8 @@
 package builders;
 
 import exceptions.InvalidBuilderOperationException;
-import medias.Music;
-import medias.ListMedia;
-import medias.Video;
+import media.ListMedia;
+import media.StdMedia;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -11,8 +10,6 @@ import java.util.Deque;
 public class StdMediaBuilder implements MediaBuilder {
     private int duration;
     private String name;
-    private String artist;
-    private String resolution;
 
     private BuilderState state;
     private ListMedia listMedia;
@@ -24,11 +21,11 @@ public class StdMediaBuilder implements MediaBuilder {
     }
 
     @Override
-    public void startMusic() throws InvalidBuilderOperationException {
+    public void startMedia() throws InvalidBuilderOperationException {
         if (state != BuilderState.NONE) throw new InvalidBuilderOperationException("The previous media is not finished");
-        state = BuilderState.MUSIC;
+        state = BuilderState.MEDIA;
         duration = -1;
-        name = artist = resolution = null;
+        name = null;
     }
 
     @Override
@@ -36,14 +33,6 @@ public class StdMediaBuilder implements MediaBuilder {
         if (state != BuilderState.NONE) throw new InvalidBuilderOperationException("The previous media is not finished");
         if (listMedia == null) listMedia = new ListMedia();
         else listMediaStack.addFirst(new ListMedia());
-    }
-
-    @Override
-    public void startVideo() throws InvalidBuilderOperationException {
-        if (state != BuilderState.NONE) throw new InvalidBuilderOperationException("The previous media is not finished");
-        state = BuilderState.VIDEO;
-        duration = -1;
-        name = artist = resolution = null;
     }
 
     @Override
@@ -70,25 +59,11 @@ public class StdMediaBuilder implements MediaBuilder {
     }
 
     @Override
-    public void setArtist(String artist) throws InvalidBuilderOperationException {
-        if (state != BuilderState.MUSIC) throw new InvalidBuilderOperationException("This media is not a music");
-        if (this.artist != null) throw new InvalidBuilderOperationException("The artist has already been set");
-        this.artist = artist;
-    }
+    public void stopMedia() throws InvalidBuilderOperationException {
+        if (state != BuilderState.MEDIA) throw new InvalidBuilderOperationException("No media to stop");
+        if (duration == -1 || name == null) throw new InvalidBuilderOperationException("Not all parameters have been set for this media");
 
-    @Override
-    public void setResolution(String resolution) throws InvalidBuilderOperationException {
-        if (state != BuilderState.VIDEO) throw new InvalidBuilderOperationException("This media is not a video");
-        if (this.resolution != null) throw new InvalidBuilderOperationException("The artist has already been set");
-        this.resolution = resolution;
-    }
-
-    @Override
-    public void stopMusic() throws InvalidBuilderOperationException {
-        if (state != BuilderState.MUSIC) throw new InvalidBuilderOperationException("This media is not a music");
-        if (duration == -1 || name == null || artist == null) throw new InvalidBuilderOperationException("Not all parameters have been set for this media");
-
-        Music m = new Music(duration, name, artist);
+        StdMedia m = new StdMedia(duration, name);
 
         if (listMediaStack.size() != 0) listMediaStack.getFirst().add(m);
         else listMedia.add(m);
@@ -99,26 +74,19 @@ public class StdMediaBuilder implements MediaBuilder {
     @Override
     public void stopList() throws InvalidBuilderOperationException {
         if (listMedia != null){
-            if (listMediaStack.size() != 0){
+            if (listMediaStack.size() == 1){
                 if (listMediaStack.getFirst().getName() == null) throw new InvalidBuilderOperationException("This playlist does not have any name");
+                listMediaStack.getFirst().setParent(listMedia);
                 listMedia.add(listMediaStack.removeFirst());
+            } else if(listMediaStack.size() > 1) {
+                if (listMediaStack.getFirst().getName() == null) throw new InvalidBuilderOperationException("This playlist does not have any name");
+                ListMedia l = listMediaStack.removeFirst();
+                l.setParent(listMediaStack.getFirst());
+                listMediaStack.getFirst().add(l);
             } else {
                 if (listMedia.getName() == null) throw new InvalidBuilderOperationException("The main playlist does not have any name");
             }
         } else throw new InvalidBuilderOperationException("There is no playlist to stop");
-    }
-
-    @Override
-    public void stopVideo() throws InvalidBuilderOperationException {
-        if (state != BuilderState.VIDEO) throw new InvalidBuilderOperationException("This media is not a video");
-        if (duration == -1 || name == null || resolution == null) throw new InvalidBuilderOperationException("Not all parameters have been set for this media");
-
-        Video v = new Video(duration, name, resolution);
-
-        if (listMediaStack.size() != 0) listMediaStack.getFirst().add(v);
-        else listMedia.add(v);
-
-        state = BuilderState.NONE;
     }
 
     @Override

@@ -2,10 +2,7 @@ import builders.MediaBuilder;
 import builders.StdMediaBuilder;
 import editor.EditorModel;
 import editor.StdEditorModel;
-import medias.Media;
-import medias.StdMediaLoader;
-import xml.XMLMediaLoader;
-import xml.XMLMediaSaver;
+import media.Media;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -36,7 +33,7 @@ public class Editor {
         consoleReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    private void run() throws IOException {
+    public void run() throws IOException {
         String command = "";
 
         while (!command.equals("stop")){
@@ -62,6 +59,8 @@ public class Editor {
                 importFolder(command);
             } else if (command.equals("help")){
                 System.out.println(getHelpInfo());
+            } else {
+                System.out.println("Unknown command");
             }
         }
     }
@@ -303,7 +302,7 @@ public class Editor {
     }
 
     public static void main(String[] args){
-        EditorModel model = new StdEditorModel(new StdMediaLoader(), new XMLMediaLoader(), new XMLMediaSaver());
+        EditorModel model = new StdEditorModel();
         MediaBuilder builder = new StdMediaBuilder();
         Editor editor = new Editor(model, builder);
 

@@ -2,11 +2,10 @@ package editor;
 
 import builders.MediaBuilder;
 import exceptions.BadMediaTypeException;
-import medias.ListMedia;
+import media.ListMedia;
+import observable.Observable;
 
-import javax.swing.event.ChangeListener;
-
-public interface EditorModel {
+public interface EditorModel extends Observable {
     void createPlaylist(String name);
     void loadPlaylist(String filename, MediaBuilder builder) throws Exception;
     void savePlaylist(String filename) throws Exception;
@@ -16,7 +15,5 @@ public interface EditorModel {
     void enterSubList(int num) throws BadMediaTypeException;
     void returnToParentList();
     ListMedia getCurrentList();
-
-    void addChangeListener(ChangeListener listener);
-    void removeChangeListener(ChangeListener listener);
+    ListMedia getPlaylist();
 }

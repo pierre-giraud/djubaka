@@ -1,37 +1,21 @@
 package editor;
 
 import builders.MediaBuilder;
-import exceptions.BadFileExtensionException;
 import exceptions.BadMediaTypeException;
-import medias.Media;
-import medias.MediaLoader;
-import medias.ListMedia;
-import medias.MediaSaver;
+import media.Media;
+import media.ListMedia;
+import file.MediaLoader;
+import file.MediaSaver;
+import observable.ObservableSubject;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
 import java.io.File;
 
-public class StdEditorModel implements EditorModel {
-
-    private MediaLoader stdLoader;
-    private MediaLoader fileLoader;
-    private MediaSaver saver;
+public class StdEditorModel extends ObservableSubject implements EditorModel {
 
     private ListMedia listMedia;
     private ListMedia currentList;
 
-    private ChangeEvent changeEvent;
-    private EventListenerList listenerList;
-
-    public StdEditorModel(MediaLoader stdLoader, MediaLoader fileLoader, MediaSaver saver){
-        this.stdLoader = stdLoader;
-        this.fileLoader = fileLoader;
-        this.saver = saver;
-
-        listenerList = new EventListenerList();
-    }
+    public StdEditorModel(){ super(); }
 
     @Override
     public void createPlaylist(String name) {
@@ -43,9 +27,7 @@ public class StdEditorModel implements EditorModel {
 
     @Override
     public void loadPlaylist(String filename, MediaBuilder builder) throws Exception {
-        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
-        fileLoader.load(filename, builder);
-        listMedia = builder.getList();
+        listMedia = MediaLoader.loadListFromXPL(filename, builder);
         currentList = listMedia;
         builder.resetList();
         fireStateChanged();
@@ -53,21 +35,20 @@ public class StdEditorModel implements EditorModel {
 
     @Override
     public void savePlaylist(String filename) throws Exception {
-        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
-        saver.save(filename, listMedia);
+        MediaSaver.saveXPL(filename, listMedia);
     }
 
     @Override
     public void importMedia(String filename, MediaBuilder builder) throws Exception {
         if (currentList == null) throw new NullPointerException("Cannot import file : no list has been created");
-        stdLoader.load(filename, builder);
-        currentList.add(builder.getList().getChild(0));
+        Media m = MediaLoader.loadStdMediaFromMediaFile(filename);
+        currentList.add(m);
         builder.resetList();
     }
 
     @Override
     public void importFolderMedia(String folder, MediaBuilder builder) throws Exception {
-        if (currentList == null) throw new NullPointerException("Cannot import file : no list has been created");
+        if (currentList == null) throw new NullPointerException("Cannot import folder : no list has been created");
 
         File fold = new File(folder);
         if (fold.listFiles() == null) throw new NullPointerException("This folder is empty or does not exist");
@@ -88,9 +69,10 @@ public class StdEditorModel implements EditorModel {
 
     @Override
     public void importList(String filename, MediaBuilder builder) throws Exception {
-        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
-        fileLoader.load(filename, builder);
-        currentList.add(builder.getList());
+        if (currentList == null) throw new NullPointerException("Cannot import list : no list has been created");
+        ListMedia l = MediaLoader.loadListFromXPL(filename, builder);
+        l.setParent(currentList);
+        currentList.add(l);
         builder.resetList();
     }
 
@@ -102,9 +84,7 @@ public class StdEditorModel implements EditorModel {
         Media m = currentList.getChild(num);
 
         if (m instanceof ListMedia){
-            ListMedia sublist = (ListMedia) m;
-            sublist.setParent(currentList);
-            currentList = sublist;
+            currentList = (ListMedia) m;
             fireStateChanged();
         } else {
             throw new BadMediaTypeException("Entry " + num + " is not a sublist");
@@ -127,53 +107,8 @@ public class StdEditorModel implements EditorModel {
     }
 
     @Override
-    public void addChangeListener(ChangeListener listener) {
-        listenerList.add(ChangeListener.class, listener);
-    }
-
-    @Override
-    public void removeChangeListener(ChangeListener listener) {
-        listenerList.remove(ChangeListener.class, listener);
-    }
-
-    protected void fireStateChanged(){
-        ChangeListener[] listeners = listenerList.getListeners(ChangeListener.class);
-
-        for (ChangeListener cl : listeners){
-            if (changeEvent == null) changeEvent = new ChangeEvent(this);
-            cl.stateChanged(changeEvent);
-        }
-    }
-
-    public MediaLoader getStdLoader() {
-        return stdLoader;
-    }
-
-    public void setStdLoader(MediaLoader stdLoader) {
-        this.stdLoader = stdLoader;
-    }
-
-    public MediaLoader getFileLoader() {
-        return fileLoader;
-    }
-
-    public void setFileLoader(MediaLoader fileLoader) {
-        this.fileLoader = fileLoader;
-    }
-
-    public MediaSaver getSaver() {
-        return saver;
-    }
-
-    public void setSaver(MediaSaver saver) {
-        this.saver = saver;
-    }
-
-    public ListMedia getListMedia() {
-        return listMedia;
-    }
-
-    public void setListMedia(ListMedia listMedia) {
-        this.listMedia = listMedia;
+    public ListMedia getPlaylist() {
+        if (listMedia != null) return listMedia;
+        else throw new NullPointerException("No list has been created");
     }
 }
