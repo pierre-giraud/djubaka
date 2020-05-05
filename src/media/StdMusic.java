@@ -46,6 +46,6 @@ public class StdMusic implements Music {
 
     @Override
     public String toString() {
-        return "(Music) " + name + " [by " + artist + "] (" + duration + " SEC)";
+        return "(Music) " + name + " [by " + artist + "]";
     }
 }

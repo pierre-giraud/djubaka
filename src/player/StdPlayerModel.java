@@ -54,7 +54,6 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
         } else if (currentList.getParent() != null){
             ListMedia l = currentList;
             currentList = currentList.getParent();
-
             goToNextMedia(l);
         } else {
             finished = true;
@@ -81,8 +80,35 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
         } else if (currentList.getParent() != null){
             ListMedia l = currentList;
             currentList = currentList.getParent();
-
             goToPreviousMedia(l);
+        }
+    }
+
+    @Override
+    public void goToNextParentMedia() {
+        if (currentMedia == null) throw new NullPointerException("Playlist not started");
+
+        if (currentList.getParent() != null) {
+            ListMedia l = currentList;
+            currentList = currentList.getParent();
+            goToNextMedia(l);
+        } else {
+            finished = true;
+            fireStateChanged();
+        }
+    }
+
+    @Override
+    public void goToPreviousParentMedia() {
+        if (currentMedia == null) throw new NullPointerException("Playlist not started");
+
+        if (currentList.getParent() != null){
+            ListMedia l = currentList;
+            currentList = currentList.getParent();
+            goToPreviousMedia(l);
+        } else {
+            finished = true;
+            fireStateChanged();
         }
     }
 

@@ -8,6 +8,8 @@ public interface PlayerModel extends Observable {
     void startPlaylist();
     void goToNextMedia(Media media);
     void goToPreviousMedia(Media media);
+    void goToNextParentMedia();
+    void goToPreviousParentMedia();
     Media getCurrentMedia();
     Media getCurrentMediaInfo();
     void setCurrentMediaInfo(Media m);

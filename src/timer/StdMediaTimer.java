@@ -1,6 +1,8 @@
 package timer;
 
+import exceptions.MediaTimerAlreadyDefinedException;
 import exceptions.MediaTimerException;
+import exceptions.UndefinedMediaTimerException;
 import observable.ObservableSubject;
 
 import java.util.Timer;
@@ -8,17 +10,33 @@ import java.util.TimerTask;
 
 public class StdMediaTimer extends ObservableSubject implements MediaTimer {
 
+    private static MediaTimer instance = null;
+
     private Timer timer;
     private TimerTask task;
     private int time;
 
     private TimerState state;
 
-    public StdMediaTimer(){
+    protected StdMediaTimer(){
         super();
 
         time = -1;
         state = TimerState.NOT_STARTED;
+    }
+
+    public static synchronized MediaTimer getInstance() throws UndefinedMediaTimerException {
+        if (instance == null) throw new UndefinedMediaTimerException("The timer is not defined");
+        return instance;
+    }
+
+    protected static synchronized void setInstance(MediaTimer mediaTimer) throws MediaTimerAlreadyDefinedException {
+        if (instance != null) throw new MediaTimerAlreadyDefinedException("The timer is already defined");
+        instance = mediaTimer;
+    }
+
+    public static void setInstance() throws MediaTimerAlreadyDefinedException {
+        setInstance(new StdMediaTimer());
     }
 
     @Override

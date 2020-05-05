@@ -1,6 +1,8 @@
 import builders.MediaBuilder;
 import builders.StdMediaBuilder;
+import exceptions.MediaTimerAlreadyDefinedException;
 import exceptions.MediaTimerException;
+import exceptions.UndefinedMediaTimerException;
 import file.MediaLoader;
 import media.*;
 import player.PlayerModel;
@@ -20,12 +22,15 @@ public class ConsolePlayer {
     private PlayerModel model;
     private MediaTimer timer;
 
-    private boolean debugMod;
     private BufferedReader consoleReader;
 
     public ConsolePlayer(PlayerModel model, boolean debugMod){
-        this.debugMod = debugMod;
-        this.timer = new StdMediaTimer();
+        try {
+            if (!debugMod) StdMediaTimer.setInstance();
+            this.timer = StdMediaTimer.getInstance();
+        } catch (UndefinedMediaTimerException | MediaTimerAlreadyDefinedException e) {
+            e.printStackTrace();
+        }
         this.model = model;
 
         ChangeListener modelListener = new ChangeListener() {
@@ -37,14 +42,10 @@ public class ConsolePlayer {
                             Media media = MediaLoader.loadCompleteMediaFromMediaFile(model.getCurrentMedia().getName());
                             model.setCurrentMediaInfo(media);
 
-                            System.out.print("\n" + media.toString());
-                        } else {
-                            System.out.println(model.getCurrentMediaInfo().toString());
+                            if (timer.getState() != TimerState.NOT_STARTED) timer.restart();
                         }
-
-                        if (timer.getState() != TimerState.NOT_STARTED) timer.restart();
                     } else {
-                        timer.stop();
+                        if (!debugMod) timer.stop();
                         System.out.println("\nThe playlist has ended");
                     }
                 } catch (Exception e) {
@@ -67,7 +68,6 @@ public class ConsolePlayer {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
         };
 
@@ -97,56 +97,18 @@ public class ConsolePlayer {
                 case "resume":
                     timer.resume();
                     break;
-                case "next":
+                case "next media":
                     model.goToNextMedia(model.getCurrentMedia());
                     break;
-                case "previous":
+                case "previous media":
                     model.goToPreviousMedia(model.getCurrentMedia());
                     break;
+                case "next parent media":
+                    model.goToNextParentMedia();
                 default:
                     break;
             }
         }
-
-        /*Thread thread = new Thread() {
-            public void run(){
-                try {
-                    String command = "";
-
-                    while (!command.equals("stop")){
-                        command = consoleReader.readLine();
-
-                        switch (command) {
-                            case "pause":
-                                timer.pause();
-                                break;
-                            case "resume":
-                                timer.resume();
-                                break;
-                            case "next":
-                                model.goToNextMedia(model.getCurrentMedia());
-                                break;
-                            case "previous":
-                                model.goToPreviousMedia(model.getCurrentMedia());
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        };
-        thread.start();*/
-    }
-
-    public PlayerModel getModel(){
-        return model;
-    }
-
-    public MediaTimer getTimer(){
-        return timer;
     }
 
     public static void main(String[] args){

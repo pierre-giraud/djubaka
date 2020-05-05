@@ -1,5 +1,7 @@
 import builders.MediaBuilder;
 import builders.StdMediaBuilder;
+import exceptions.MediaTimerAlreadyDefinedException;
+import exceptions.UndefinedMediaTimerException;
 import file.MediaLoader;
 import media.ListMedia;
 import media.Media;
@@ -35,7 +37,13 @@ public class GraphicPlayer {
     private JButton previousSublistBtn;
 
     public GraphicPlayer(PlayerModel model){
-        timer = new StdMediaTimer();
+        try {
+            StdMediaTimer.setInstance();
+            timer = StdMediaTimer.getInstance();
+        } catch (MediaTimerAlreadyDefinedException | UndefinedMediaTimerException e) {
+            e.printStackTrace();
+        }
+
         this.model = model;
 
         createView();
@@ -51,13 +59,13 @@ public class GraphicPlayer {
 
     private void createView() {
         frame = new JFrame("Djubaka");
-        frame.setPreferredSize(new Dimension(600,250));
+        frame.setPreferredSize(new Dimension(600,200));
 
         currentMedia = new JLabel("Aucun");
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
-        progressBar.setString("0 / 0");
-        progressBar.setPreferredSize(new Dimension(200, 30));
+        progressBar.setString("0 / 0 sec");
+        progressBar.setPreferredSize(new Dimension(400, 30));
 
         playBtn = JButtonFactory.createStdButton("./resources/img/playIcon.png", "Play");
         pauseBtn = JButtonFactory.createStdButton("./resources/img/pauseIcon.png", "Pause");
@@ -68,9 +76,9 @@ public class GraphicPlayer {
         nextMediaBtn.setEnabled(false);
         previousMediaBtn = JButtonFactory.createStdButton("./resources/img/previousMediaIcon.png", "Previous Media");
         previousMediaBtn.setEnabled(false);
-        nextSublistBtn = JButtonFactory.createStdButton("./resources/img/nextSublistIcon.png", "Next Sublist");
+        nextSublistBtn = JButtonFactory.createStdButton("./resources/img/nextParentMediaIcon.png", "Next Sublist");
         nextSublistBtn.setEnabled(false);
-        previousSublistBtn = JButtonFactory.createStdButton("./resources/img/previousSublistIcon.png", "Previous Sublist");
+        previousSublistBtn = JButtonFactory.createStdButton("./resources/img/previousParentMediaIcon.png", "Previous Sublist");
         previousSublistBtn.setEnabled(false);
     }
 
@@ -79,18 +87,28 @@ public class GraphicPlayer {
             p.setPreferredSize(new Dimension(150, (int) frame.getPreferredSize().getHeight()));
             p.setBorder(BorderFactory.createEtchedBorder());
 
+            p.add(playBtn);
+
             JPanel q = new JPanel(); {
-                q.add(playBtn);
                 q.add(pauseBtn);
+                q.add(resumeBtn);
             }
 
             p.add(q);
 
-            p.add(resumeBtn);
-            p.add(nextMediaBtn);
-            p.add(previousMediaBtn);
-            p.add(nextSublistBtn);
-            p.add(previousSublistBtn);
+            q = new JPanel(); {
+                q.add(nextMediaBtn);
+                q.add(previousMediaBtn);
+            }
+
+            p.add(q);
+
+            q = new JPanel(); {
+                q.add(nextSublistBtn);
+                q.add(previousSublistBtn);
+            }
+
+            p.add(q);
         }
 
         frame.add(p, BorderLayout.WEST);
@@ -110,8 +128,8 @@ public class GraphicPlayer {
 
             p.add(q, BorderLayout.NORTH);
 
-            q = new JPanel(); {
-                q.add(progressBar);
+            q = new JPanel(new BorderLayout()); {
+                q.add(progressBar, BorderLayout.SOUTH);
             }
 
             p.add(q);
@@ -128,18 +146,19 @@ public class GraphicPlayer {
             public void stateChanged(ChangeEvent changeEvent) {
                 try {
                     if (!model.isFinished()){
+                        if (timer.getState() != TimerState.NOT_STARTED) timer.stop();
                         Media media = MediaLoader.loadCompleteMediaFromMediaFile(model.getCurrentMedia().getName());
                         model.setCurrentMediaInfo(media);
 
                         currentMedia.setText(media.toString());
                         progressBar.setMaximum(media.getDuration());
 
-                        if (timer.getState() != TimerState.NOT_STARTED) timer.restart();
+                        if (timer.getState() == TimerState.NOT_STARTED) timer.start();
                     } else {
                         timer.stop();
                         currentMedia.setText("Aucun");
                         progressBar.setValue(0);
-                        progressBar.setString("0 / 0");
+                        progressBar.setString("0 / 0 sec");
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -152,11 +171,15 @@ public class GraphicPlayer {
         ChangeListener timerListener = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
-                progressBar.setValue(timer.getTime());
-                progressBar.setString(timer.getTime() + " / " + model.getCurrentMediaInfo().getDuration());
+                try {
+                    progressBar.setValue(timer.getTime());
+                    progressBar.setString(timer.getTime() + " / " + model.getCurrentMediaInfo().getDuration() + " sec");
 
-                if (timer.getTime() == model.getCurrentMediaInfo().getDuration()) {
-                    model.goToNextMedia(model.getCurrentMedia());
+                    if (timer.getTime() == model.getCurrentMediaInfo().getDuration()) {
+                        model.goToNextMedia(model.getCurrentMedia());
+                    }
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
                 }
             }
         };
@@ -168,7 +191,6 @@ public class GraphicPlayer {
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
                     model.startPlaylist();
-                    timer.start();
 
                     playBtn.setEnabled(false);
                     pauseBtn.setEnabled(true);
@@ -238,6 +260,34 @@ public class GraphicPlayer {
                 }
             }
         });
+
+        nextSublistBtn.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    model.goToNextParentMedia();
+
+                    if (!pauseBtn.isEnabled()) pauseBtn.setEnabled(true);
+                    if (resumeBtn.isEnabled()) resumeBtn.setEnabled(false);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+
+        previousSublistBtn.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    model.goToPreviousParentMedia();
+
+                    if (!pauseBtn.isEnabled()) pauseBtn.setEnabled(true);
+                    if (resumeBtn.isEnabled()) resumeBtn.setEnabled(false);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
     }
 
     public static void main(String[] args){
@@ -270,17 +320,17 @@ public class GraphicPlayer {
             ListMedia list = MediaLoader.loadListFromXPL(filename, builder);
             PlayerModel model = new StdPlayerModel(list);
 
-            if (option.equals("-d")) {
-                ConsolePlayer debugPlayer = new ConsolePlayer(model, true);
-                //debugPlayer.getTimer().start();
-            }
-
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
                     new GraphicPlayer(model).display();
                 }
             });
+
+            if (option.equals("-d")) {
+                Thread.sleep(500);
+                new ConsolePlayer(model, true);
+            }
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

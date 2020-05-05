@@ -46,6 +46,6 @@ public class StdVideo implements Video {
 
     @Override
     public String toString() {
-        return "(Video) " + name + " [displayed in " + resolution + "] (" + duration + " sec)";
+        return "(Video) " + name + " [displayed in " + resolution + "]";
     }
 }
