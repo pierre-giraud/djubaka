@@ -1,9 +1,8 @@
-import builders.MediaBuilder;
-import builders.StdMediaBuilder;
 import exceptions.MediaTimerAlreadyDefinedException;
 import exceptions.MediaTimerException;
 import exceptions.UndefinedMediaTimerException;
-import file.MediaLoader;
+import file.MediaFileLoader;
+import file.XPLMediaLoader;
 import media.*;
 import player.PlayerModel;
 import player.StdPlayerModel;
@@ -39,7 +38,7 @@ public class ConsolePlayer {
                 try {
                     if (!model.isFinished()){
                         if (!debugMod){
-                            Media media = MediaLoader.loadCompleteMediaFromMediaFile(model.getCurrentMedia().getName());
+                            Media media = MediaFileLoader.loadRealMediaFromFile(model.getCurrentMedia().getName());
                             model.setCurrentMediaInfo(media);
 
                             if (timer.getState() != TimerState.NOT_STARTED) timer.restart();
@@ -118,8 +117,7 @@ public class ConsolePlayer {
         }
 
         try {
-            MediaBuilder builder = new StdMediaBuilder();
-            ListMedia list = MediaLoader.loadListFromXPL(args[0], builder);
+            ListMedia list = new XPLMediaLoader().loadListFromXPL(args[0]);
 
             PlayerModel model = new StdPlayerModel(list);
             ConsolePlayer player = new ConsolePlayer(model, false);

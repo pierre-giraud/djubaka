@@ -1,8 +1,7 @@
-import builders.MediaBuilder;
-import builders.StdMediaBuilder;
 import exceptions.MediaTimerAlreadyDefinedException;
 import exceptions.UndefinedMediaTimerException;
-import file.MediaLoader;
+import file.MediaFileLoader;
+import file.XPLMediaLoader;
 import media.ListMedia;
 import media.Media;
 import player.PlayerModel;
@@ -147,7 +146,7 @@ public class GraphicPlayer {
                 try {
                     if (!model.isFinished()){
                         if (timer.getState() != TimerState.NOT_STARTED) timer.stop();
-                        Media media = MediaLoader.loadCompleteMediaFromMediaFile(model.getCurrentMedia().getName());
+                        Media media = MediaFileLoader.loadRealMediaFromFile(model.getCurrentMedia().getName());
                         model.setCurrentMediaInfo(media);
 
                         currentMedia.setText(media.toString());
@@ -156,7 +155,7 @@ public class GraphicPlayer {
                         if (timer.getState() == TimerState.NOT_STARTED) timer.start();
                     } else {
                         timer.stop();
-                        currentMedia.setText("Aucun");
+                        currentMedia.setText("The playlist has ended");
                         progressBar.setValue(0);
                         progressBar.setString("0 / 0 sec");
                     }
@@ -316,8 +315,7 @@ public class GraphicPlayer {
         }
 
         try {
-            MediaBuilder builder = new StdMediaBuilder();
-            ListMedia list = MediaLoader.loadListFromXPL(filename, builder);
+            ListMedia list = new XPLMediaLoader().loadListFromXPL(filename);
             PlayerModel model = new StdPlayerModel(list);
 
             SwingUtilities.invokeLater(new Runnable() {

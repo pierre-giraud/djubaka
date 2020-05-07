@@ -9,12 +9,12 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class HandlerImpl extends DefaultHandler implements ContentHandler, ErrorHandler {
+public class XPLHandler extends DefaultHandler implements ContentHandler, ErrorHandler {
 
     private Deque<String> stack;
     private MediaBuilder builder;
 
-    public HandlerImpl(MediaBuilder builder) {
+    public XPLHandler(MediaBuilder builder) {
         this.builder = builder;
     }
 

@@ -48,7 +48,7 @@ public class ListMedia implements Media {
     @Override
     public int getDuration() {
         int duration = 0;
-        for(Media m : children) duration += m.getDuration();
+        for (Media m : children) duration += m.getDuration();
 
         return duration;
     }

@@ -1,11 +1,11 @@
 package editor;
 
-import builders.MediaBuilder;
 import exceptions.BadMediaTypeException;
+import file.MediaFileLoader;
 import media.Media;
 import media.ListMedia;
-import file.MediaLoader;
-import file.MediaSaver;
+import file.XPLMediaLoader;
+import file.XPLMediaSaver;
 import observable.ObservableSubject;
 
 import java.io.File;
@@ -15,7 +15,12 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
     private ListMedia listMedia;
     private ListMedia currentList;
 
-    public StdEditorModel(){ super(); }
+    private XPLMediaLoader mediaLoader;
+
+    public StdEditorModel(){
+        super();
+        mediaLoader = new XPLMediaLoader();
+    }
 
     @Override
     public void createPlaylist(String name) {
@@ -26,28 +31,26 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
     }
 
     @Override
-    public void loadPlaylist(String filename, MediaBuilder builder) throws Exception {
-        listMedia = MediaLoader.loadListFromXPL(filename, builder);
+    public void loadPlaylist(String filename) throws Exception {
+        listMedia = mediaLoader.loadListFromXPL(filename);
         currentList = listMedia;
-        builder.resetList();
         fireStateChanged();
     }
 
     @Override
     public void savePlaylist(String filename) throws Exception {
-        MediaSaver.saveXPL(filename, listMedia);
+        XPLMediaSaver.saveXPL(filename, listMedia);
     }
 
     @Override
-    public void importMedia(String filename, MediaBuilder builder) throws Exception {
+    public void importMedia(String filename) throws Exception {
         if (currentList == null) throw new NullPointerException("Cannot import file : no list has been created");
-        Media m = MediaLoader.loadStdMediaFromMediaFile(filename);
+        Media m = MediaFileLoader.loadStdMediaMediaFile(filename);
         currentList.add(m);
-        builder.resetList();
     }
 
     @Override
-    public void importFolderMedia(String folder, MediaBuilder builder) throws Exception {
+    public void importFolderMedia(String folder) throws Exception {
         if (currentList == null) throw new NullPointerException("Cannot import folder : no list has been created");
 
         File fold = new File(folder);
@@ -55,25 +58,23 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
 
         for (File entry : fold.listFiles()) {
             if (entry.isDirectory()) {
-                importFolderMedia(entry.getPath(), builder);
+                importFolderMedia(entry.getPath());
             } else {
                 try {
-                    importMedia(entry.getPath(), builder);
+                    importMedia(entry.getPath());
                 } catch (Exception e){
                     System.out.println(e.getMessage() + " (" + entry.getPath() + ")");
-                    builder.resetList();
                 }
             }
         }
     }
 
     @Override
-    public void importList(String filename, MediaBuilder builder) throws Exception {
+    public void importList(String filename) throws Exception {
         if (currentList == null) throw new NullPointerException("Cannot import list : no list has been created");
-        ListMedia l = MediaLoader.loadListFromXPL(filename, builder);
+        ListMedia l = mediaLoader.loadListFromXPL(filename);
         l.setParent(currentList);
         currentList.add(l);
-        builder.resetList();
     }
 
     @Override

@@ -1,38 +1,20 @@
 package file;
 
-import builders.MediaBuilder;
-import exceptions.BadFileExtensionException;
 import exceptions.BadMediaTypeException;
 import exceptions.InvalidBuilderOperationException;
-import media.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
+import media.Media;
+import media.StdMedia;
+import media.StdMusic;
+import media.StdVideo;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaLoader {
-    public static ListMedia loadListFromXPL(String filename, MediaBuilder builder) throws Exception {
-        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
-
-        InputSource is = new InputSource(new BufferedInputStream(new FileInputStream(filename)));
-        SAXParserFactory spf = SAXParserFactory.newInstance();
-        spf.setValidating(true);
-        SAXParser sp = spf.newSAXParser();
-        XMLReader xr = sp.getXMLReader();
-        HandlerImpl handler = new HandlerImpl(builder);
-        xr.setContentHandler(handler);
-        xr.setErrorHandler(handler);
-
-        xr.parse(is);
-
-        return builder.getList();
-    }
-
-    public static Media loadStdMediaFromMediaFile(String filename) throws Exception {
+public class MediaFileLoader {
+    public static Media loadStdMediaMediaFile(String filename) throws Exception {
         File file = new File(filename);
 
         String ext = filename.substring(filename.length() - 4);
@@ -45,7 +27,7 @@ public class MediaLoader {
         return new StdMedia(Integer.parseInt(duration), filename);
     }
 
-    public static Media loadCompleteMediaFromMediaFile(String filename) throws Exception {
+    public static Media loadRealMediaFromFile(String filename) throws Exception {
         File file = new File(filename);
 
         String ext = filename.substring(filename.length() - 4);
@@ -65,4 +47,5 @@ public class MediaLoader {
         if (ext.equals(".mta")) return new StdMusic(Integer.parseInt(data.get(0)), data.get(1), data.get(2));
         return new StdVideo(Integer.parseInt(data.get(0)), data.get(1), data.get(2));
     }
+
 }

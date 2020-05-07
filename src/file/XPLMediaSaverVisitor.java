@@ -4,11 +4,11 @@ import media.*;
 
 import java.io.PrintStream;
 
-public class XmlMediaSaverVisitor implements MediaVisitor {
+public class XPLMediaSaverVisitor implements MediaVisitor {
 
     private PrintStream stream;
 
-    public XmlMediaSaverVisitor(PrintStream stream){
+    public XPLMediaSaverVisitor(PrintStream stream){
         this.stream = stream;
     }
 

@@ -1,5 +1,3 @@
-import builders.MediaBuilder;
-import builders.StdMediaBuilder;
 import editor.EditorModel;
 import editor.StdEditorModel;
 import media.Media;
@@ -13,19 +11,15 @@ import java.io.InputStreamReader;
 public class Editor {
 
     private EditorModel model;
-    private MediaBuilder builder;
-    private ChangeListener changeListener;
-
     private BufferedReader consoleReader;
 
-    public Editor(EditorModel model, MediaBuilder builder){
+    public Editor(EditorModel model){
         this.model = model;
-        this.builder = builder;
 
-        changeListener = new ChangeListener() {
+        ChangeListener changeListener = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
-                System.out.println("Current list : " + getModel().getCurrentList().getName());
+                System.out.println("Current list : " + Editor.this.model.getCurrentList().getName());
             }
         };
 
@@ -65,7 +59,7 @@ public class Editor {
         }
     }
 
-    private void createList(String command){
+    public void createList(String command){
         String[] arg;
         if (command.matches("create \".*\"")){
             arg = command.split("\"");
@@ -86,7 +80,7 @@ public class Editor {
         model.createPlaylist(arg[1]);
     }
 
-    private void loadList(String command){
+    public void loadList(String command){
         String[] arg;
         if (command.matches("load \".*\"")){
             arg = command.split("\"");
@@ -105,13 +99,13 @@ public class Editor {
         } catch (NullPointerException ignored){}
 
         try {
-            model.loadPlaylist(arg[1], builder);
+            model.loadPlaylist(arg[1]);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void saveList(String command){
+    public void saveList(String command){
         String[] arg;
         if (command.matches("save \".*\"")){
             arg = command.split("\"");
@@ -132,7 +126,7 @@ public class Editor {
         }
     }
 
-    private void printCurrentList(){
+    public void printCurrentList(){
         try {
             StringBuilder output = new StringBuilder("List : " + model.getCurrentList().getName());
 
@@ -153,7 +147,7 @@ public class Editor {
         }
     }
 
-    private void enterSubList(String command){
+    public void enterSubList(String command){
         String[] arg = command.split(" ");
         if (arg.length != 2) {
             System.out.println("ERROR : you have to give the number of the child");
@@ -169,7 +163,7 @@ public class Editor {
         }
     }
 
-    private void backToParentList(){
+    public void backToParentList(){
         try {
             model.returnToParentList();
         } catch (NullPointerException e) {
@@ -177,7 +171,7 @@ public class Editor {
         }
     }
 
-    private void importMedia(String command){
+    public void importMedia(String command){
         try {
             String[] arg;
             if (command.matches("import media \".*\"")){
@@ -189,7 +183,7 @@ public class Editor {
                 }
 
                 System.out.println(arg[0] + " - " + arg[1]);
-                model.importMedia(arg[1], builder);
+                model.importMedia(arg[1]);
             } else {
                 arg = command.split(" ");
 
@@ -199,14 +193,14 @@ public class Editor {
                 }
 
                 System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
-                model.importMedia(arg[2], builder);
+                model.importMedia(arg[2]);
             }
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
 
-    private void importFolder(String command){
+    public void importFolder(String command){
         try {
             String[] arg;
             if (command.matches("import folder \".*\"")){
@@ -218,7 +212,7 @@ public class Editor {
                 }
 
                 System.out.println(arg[0] + " - " + arg[1]);
-                model.importFolderMedia(arg[1], builder);
+                model.importFolderMedia(arg[1]);
             } else {
                 arg = command.split(" ");
 
@@ -228,7 +222,7 @@ public class Editor {
                 }
 
                 System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
-                model.importFolderMedia(arg[2], builder);
+                model.importFolderMedia(arg[2]);
             }
         } catch (Exception e){
             System.out.println(e.getMessage());
@@ -236,7 +230,7 @@ public class Editor {
         }
     }
 
-    private void importList(String command){
+    public void importList(String command){
         try {
             String[] arg;
             if (command.matches("import list \".*\"")){
@@ -248,7 +242,7 @@ public class Editor {
                 }
 
                 System.out.println(arg[0] + " - " + arg[1]);
-                model.importList(arg[1], builder);
+                model.importList(arg[1]);
             } else {
                 arg = command.split(" ");
 
@@ -258,14 +252,14 @@ public class Editor {
                 }
 
                 System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
-                model.importList(arg[2], builder);
+                model.importList(arg[2]);
             }
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
 
-    private String getHelpInfo(){
+    public String getHelpInfo(){
         String help = "List of allowed commands : \n";
         help += String.format("%-42s","\tcreate {listname|\"list name\"}");
         help += " : Create a new list, replace the old one if exists\n";
@@ -293,18 +287,14 @@ public class Editor {
         return help;
     }
 
-    public EditorModel getModel() {
-        return model;
-    }
-
-    public void setModel(EditorModel model) {
-        this.model = model;
-    }
+    public EditorModel getModel() { return model; }
+    public void setModel(EditorModel model) { this.model = model; }
+    public BufferedReader getConsoleReader() { return consoleReader; }
+    public void setConsoleReader(BufferedReader consoleReader) { this.consoleReader = consoleReader; }
 
     public static void main(String[] args){
         EditorModel model = new StdEditorModel();
-        MediaBuilder builder = new StdMediaBuilder();
-        Editor editor = new Editor(model, builder);
+        Editor editor = new Editor(model);
 
         try {
             editor.run();
