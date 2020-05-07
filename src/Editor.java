@@ -30,6 +30,8 @@ public class Editor {
     public void run() throws IOException {
         String command = "";
 
+        System.out.println("Welcome to the playlist editor ! Type 'help' to see the commands.");
+
         while (!command.equals("stop")){
             command = consoleReader.readLine();
 
