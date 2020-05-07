@@ -66,19 +66,13 @@ public class GraphicPlayer {
         progressBar.setString("0 / 0 sec");
         progressBar.setPreferredSize(new Dimension(400, 30));
 
-        playBtn = JButtonFactory.createStdButton("./resources/img/playIcon.png", "Play");
-        pauseBtn = JButtonFactory.createStdButton("./resources/img/pauseIcon.png", "Pause");
-        pauseBtn.setEnabled(false);
-        resumeBtn = JButtonFactory.createStdButton("./resources/img/resumeIcon.png", "Resume");
-        resumeBtn.setEnabled(false);
-        nextMediaBtn = JButtonFactory.createStdButton("./resources/img/nextMediaIcon.png", "Next Media");
-        nextMediaBtn.setEnabled(false);
-        previousMediaBtn = JButtonFactory.createStdButton("./resources/img/previousMediaIcon.png", "Previous Media");
-        previousMediaBtn.setEnabled(false);
-        nextSublistBtn = JButtonFactory.createStdButton("./resources/img/nextParentMediaIcon.png", "Next Sublist");
-        nextSublistBtn.setEnabled(false);
-        previousSublistBtn = JButtonFactory.createStdButton("./resources/img/previousParentMediaIcon.png", "Previous Sublist");
-        previousSublistBtn.setEnabled(false);
+        playBtn = JButtonFactory.createImageButton("./resources/img/playIcon.png", "Play", true);
+        pauseBtn = JButtonFactory.createImageButton("./resources/img/pauseIcon.png", "Pause", false);
+        resumeBtn = JButtonFactory.createImageButton("./resources/img/resumeIcon.png", "Resume", false);
+        nextMediaBtn = JButtonFactory.createImageButton("./resources/img/nextMediaIcon.png", "Next Media", false);
+        previousMediaBtn = JButtonFactory.createImageButton("./resources/img/previousMediaIcon.png", "Previous Media", false);
+        nextSublistBtn = JButtonFactory.createImageButton("./resources/img/nextParentMediaIcon.png", "Next Sublist", false);
+        previousSublistBtn = JButtonFactory.createImageButton("./resources/img/previousParentMediaIcon.png", "Previous Sublist", false);
     }
 
     private void placeComponents() {
