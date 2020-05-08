@@ -104,6 +104,10 @@ public class ConsolePlayer {
                     break;
                 case "next parent media":
                     model.goToNextParentMedia();
+                    break;
+                case "previous parent media":
+                    model.goToPreviousParentMedia();
+                    break;
                 default:
                     break;
             }

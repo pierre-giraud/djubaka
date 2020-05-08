@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class JButtonFactory {
+public class JButtonCreator {
     public static JButton createImageButton(String filename, String replacementText, boolean enabled){
         JButton button = new JButton();
 

@@ -9,7 +9,7 @@ import player.StdPlayerModel;
 import timer.MediaTimer;
 import timer.StdMediaTimer;
 import timer.TimerState;
-import view.JButtonFactory;
+import view.JButtonCreator;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -32,8 +32,8 @@ public class GraphicPlayer {
     private JButton resumeBtn;
     private JButton nextMediaBtn;
     private JButton previousMediaBtn;
-    private JButton nextSublistBtn;
-    private JButton previousSublistBtn;
+    private JButton nextParentMediaBtn;
+    private JButton previousParentMediaBtn;
 
     public GraphicPlayer(PlayerModel model){
         try {
@@ -66,13 +66,13 @@ public class GraphicPlayer {
         progressBar.setString("0 / 0 sec");
         progressBar.setPreferredSize(new Dimension(400, 30));
 
-        playBtn = JButtonFactory.createImageButton("./resources/img/playIcon.png", "Play", true);
-        pauseBtn = JButtonFactory.createImageButton("./resources/img/pauseIcon.png", "Pause", false);
-        resumeBtn = JButtonFactory.createImageButton("./resources/img/resumeIcon.png", "Resume", false);
-        nextMediaBtn = JButtonFactory.createImageButton("./resources/img/nextMediaIcon.png", "Next Media", false);
-        previousMediaBtn = JButtonFactory.createImageButton("./resources/img/previousMediaIcon.png", "Previous Media", false);
-        nextSublistBtn = JButtonFactory.createImageButton("./resources/img/nextParentMediaIcon.png", "Next Sublist", false);
-        previousSublistBtn = JButtonFactory.createImageButton("./resources/img/previousParentMediaIcon.png", "Previous Sublist", false);
+        playBtn = JButtonCreator.createImageButton("./resources/img/playIcon.png", "Play", true);
+        pauseBtn = JButtonCreator.createImageButton("./resources/img/pauseIcon.png", "Pause", false);
+        resumeBtn = JButtonCreator.createImageButton("./resources/img/resumeIcon.png", "Resume", false);
+        nextMediaBtn = JButtonCreator.createImageButton("./resources/img/nextMediaIcon.png", "Next Media", false);
+        previousMediaBtn = JButtonCreator.createImageButton("./resources/img/previousMediaIcon.png", "Previous Media", false);
+        nextParentMediaBtn = JButtonCreator.createImageButton("./resources/img/nextParentMediaIcon.png", "Next Sublist", false);
+        previousParentMediaBtn = JButtonCreator.createImageButton("./resources/img/previousParentMediaIcon.png", "Previous Sublist", false);
     }
 
     private void placeComponents() {
@@ -97,8 +97,8 @@ public class GraphicPlayer {
             p.add(q);
 
             q = new JPanel(); {
-                q.add(nextSublistBtn);
-                q.add(previousSublistBtn);
+                q.add(nextParentMediaBtn);
+                q.add(previousParentMediaBtn);
             }
 
             p.add(q);
@@ -189,8 +189,8 @@ public class GraphicPlayer {
                     pauseBtn.setEnabled(true);
                     nextMediaBtn.setEnabled(true);
                     previousMediaBtn.setEnabled(true);
-                    nextSublistBtn.setEnabled(true);
-                    previousSublistBtn.setEnabled(true);
+                    nextParentMediaBtn.setEnabled(true);
+                    previousParentMediaBtn.setEnabled(true);
                 } catch (Exception e){
                     System.out.println(e.getMessage());
                 }
@@ -254,7 +254,7 @@ public class GraphicPlayer {
             }
         });
 
-        nextSublistBtn.addActionListener(new AbstractAction() {
+        nextParentMediaBtn.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
@@ -268,7 +268,7 @@ public class GraphicPlayer {
             }
         });
 
-        previousSublistBtn.addActionListener(new AbstractAction() {
+        previousParentMediaBtn.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
