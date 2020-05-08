@@ -1,6 +1,6 @@
 package file;
 
-import builders.MediaBuilder;
+import media.MediaBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;

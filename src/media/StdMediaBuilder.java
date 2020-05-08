@@ -1,8 +1,6 @@
-package builders;
+package media;
 
 import exceptions.InvalidBuilderOperationException;
-import media.ListMedia;
-import media.StdMedia;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

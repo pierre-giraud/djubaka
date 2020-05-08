@@ -77,7 +77,7 @@ public class Editor {
         try {
             model.getCurrentList();
             System.out.println("Replacing current playlist ...");
-        } catch (NullPointerException ignored){}
+        } catch (Exception ignored){}
 
         model.createPlaylist(arg[1]);
     }
@@ -98,12 +98,12 @@ public class Editor {
         try {
             model.getCurrentList();
             System.out.println("Replacing current playlist ...");
-        } catch (NullPointerException ignored){}
+        } catch (Exception ignored){}
 
         try {
             model.loadPlaylist(arg[1]);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -124,7 +124,7 @@ public class Editor {
             model.savePlaylist(arg[1]);
             System.out.println("Playlist saved");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -161,7 +161,7 @@ public class Editor {
         try {
             model.enterSubList(num);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -169,7 +169,7 @@ public class Editor {
         try {
             model.returnToParentList();
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -184,8 +184,8 @@ public class Editor {
                     return;
                 }
 
-                System.out.println(arg[0] + " - " + arg[1]);
                 model.importMedia(arg[1]);
+                System.out.println("File " + arg[2] + " imported");
             } else {
                 arg = command.split(" ");
 
@@ -194,11 +194,11 @@ public class Editor {
                     return;
                 }
 
-                System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
                 model.importMedia(arg[2]);
+                System.out.println("File " + arg[2] + " imported");
             }
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -223,12 +223,11 @@ public class Editor {
                     return;
                 }
 
-                System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
                 model.importFolderMedia(arg[2]);
+                System.out.println("Folder " + arg[2] + " imported");
             }
         } catch (Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -253,11 +252,11 @@ public class Editor {
                     return;
                 }
 
-                System.out.println(arg[0] + " " + arg[1] + " - " + arg[2]);
                 model.importList(arg[2]);
+                System.out.println("List " + arg[2] + " imported");
             }
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 

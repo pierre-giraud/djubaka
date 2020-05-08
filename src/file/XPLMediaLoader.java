@@ -1,7 +1,7 @@
 package file;
 
-import builders.MediaBuilder;
-import builders.StdMediaBuilder;
+import media.MediaBuilder;
+import media.StdMediaBuilder;
 import exceptions.BadFileExtensionException;
 import media.*;
 import org.xml.sax.InputSource;

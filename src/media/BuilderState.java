@@ -1,4 +1,4 @@
-package builders;
+package media;
 
 public enum BuilderState {
     NONE,
