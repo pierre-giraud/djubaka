@@ -127,11 +127,6 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
     }
 
     @Override
-    public void setCurrentMediaInfo(Media m) {
-        currentMediaInfo = m;
-    }
-
-    @Override
     public boolean isFinished() {
         return finished;
     }
@@ -139,5 +134,29 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
     @Override
     public ListMedia getPlaylist() {
         return listMedia;
+    }
+
+    public void setListMedia(ListMedia listMedia) {
+        this.listMedia = listMedia;
+    }
+
+    public ListMedia getCurrentList() {
+        return currentList;
+    }
+
+    public void setCurrentList(ListMedia currentList) {
+        this.currentList = currentList;
+    }
+
+    public void setCurrentMedia(Media currentMedia) {
+        this.currentMedia = currentMedia;
+    }
+
+    public void setCurrentMediaInfo(Media currentMediaInfo) {
+        this.currentMediaInfo = currentMediaInfo;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

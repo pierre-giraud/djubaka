@@ -98,4 +98,36 @@ public class StdMediaBuilder implements MediaBuilder {
         state = BuilderState.NONE;
         listMediaStack.clear();
     }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BuilderState getState() {
+        return state;
+    }
+
+    public void setState(BuilderState state) {
+        this.state = state;
+    }
+
+    public ListMedia getListMedia() {
+        return listMedia;
+    }
+
+    public void setListMedia(ListMedia listMedia) {
+        this.listMedia = listMedia;
+    }
+
+    public Deque<ListMedia> getListMediaStack() {
+        return listMediaStack;
+    }
+
+    public void setListMediaStack(Deque<ListMedia> listMediaStack) {
+        this.listMediaStack = listMediaStack;
+    }
 }

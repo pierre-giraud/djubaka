@@ -96,6 +96,30 @@ public class StdMediaTimer extends ObservableSubject implements MediaTimer {
         return state;
     }
 
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+
+    public TimerTask getTask() {
+        return task;
+    }
+
+    public void setTask(TimerTask task) {
+        this.task = task;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public void setState(TimerState state) {
+        this.state = state;
+    }
+
     private class Task extends TimerTask{
         @Override
         public void run() {

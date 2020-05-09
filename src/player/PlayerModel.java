@@ -12,7 +12,6 @@ public interface PlayerModel extends Observable {
     void goToPreviousParentMedia() throws Exception;
     Media getCurrentMedia();
     Media getCurrentMediaInfo();
-    void setCurrentMediaInfo(Media m);
     ListMedia getPlaylist();
     boolean isFinished();
 }

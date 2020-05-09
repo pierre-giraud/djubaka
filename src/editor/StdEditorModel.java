@@ -112,4 +112,20 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
         if (listMedia != null) return listMedia;
         else throw new NullPointerException("No list has been created");
     }
+
+    public void setListMedia(ListMedia listMedia) {
+        this.listMedia = listMedia;
+    }
+
+    public void setCurrentList(ListMedia currentList) {
+        this.currentList = currentList;
+    }
+
+    public XPLPlaylistLoader getMediaLoader() {
+        return mediaLoader;
+    }
+
+    public void setMediaLoader(XPLPlaylistLoader mediaLoader) {
+        this.mediaLoader = mediaLoader;
+    }
 }
