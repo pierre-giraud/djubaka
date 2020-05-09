@@ -1,9 +1,7 @@
 import exceptions.MediaTimerAlreadyDefinedException;
 import exceptions.UndefinedMediaTimerException;
-import file.MediaFileLoader;
 import file.XPLPlaylistLoader;
 import media.ListMedia;
-import media.Media;
 import player.PlayerModel;
 import player.StdPlayerModel;
 import timer.MediaTimer;

@@ -85,6 +85,9 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
             ListMedia l = currentList;
             currentList = currentList.getParent();
             goToPreviousMedia(l);
+        } else if (index == 0) {
+            currentMedia = media;
+            fireStateChanged();
         }
     }
 
