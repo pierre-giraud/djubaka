@@ -1,14 +1,14 @@
 package timer;
 
-import exceptions.MediaTimerException;
+import exceptions.MediaTimerStateException;
 import observable.Observable;
 
 public interface MediaTimer extends Observable {
-    void start() throws MediaTimerException;
-    void restart() throws MediaTimerException;
-    void pause() throws MediaTimerException;
-    void resume() throws MediaTimerException;
-    void stop() throws MediaTimerException;
+    void start() throws MediaTimerStateException;
+    void restart() throws MediaTimerStateException;
+    void pause() throws MediaTimerStateException;
+    void resume() throws MediaTimerStateException;
+    void stop() throws MediaTimerStateException;
     int getTime();
     TimerState getState();
 }

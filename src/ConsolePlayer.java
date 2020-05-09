@@ -1,8 +1,6 @@
 import exceptions.MediaTimerAlreadyDefinedException;
-import exceptions.MediaTimerException;
 import exceptions.UndefinedMediaTimerException;
-import file.MediaFileLoader;
-import file.XPLMediaLoader;
+import file.XPLPlaylistLoader;
 import media.*;
 import player.PlayerModel;
 import player.StdPlayerModel;
@@ -13,7 +11,6 @@ import timer.TimerState;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ConsolePlayer {
@@ -28,7 +25,7 @@ public class ConsolePlayer {
             if (!debugMod) StdMediaTimer.setInstance();
             this.timer = StdMediaTimer.getInstance();
         } catch (UndefinedMediaTimerException | MediaTimerAlreadyDefinedException e) {
-            e.printStackTrace();
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
         this.model = model;
 
@@ -38,9 +35,6 @@ public class ConsolePlayer {
                 try {
                     if (!model.isFinished()){
                         if (!debugMod){
-                            Media media = MediaFileLoader.loadRealMediaFromFile(model.getCurrentMedia().getName());
-                            model.setCurrentMediaInfo(media);
-
                             if (timer.getState() != TimerState.NOT_STARTED) timer.restart();
                         }
                     } else {
@@ -48,7 +42,7 @@ public class ConsolePlayer {
                         System.out.println("\nThe playlist has ended");
                     }
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         };
@@ -65,7 +59,7 @@ public class ConsolePlayer {
                         model.goToNextMedia(model.getCurrentMedia());
                     }
                 } catch (Exception e){
-                    e.printStackTrace();
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         };
@@ -76,7 +70,7 @@ public class ConsolePlayer {
         consoleReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public void run() throws IOException, MediaTimerException {
+    public void run() throws Exception {
         String command = "";
 
         try {
@@ -121,14 +115,13 @@ public class ConsolePlayer {
         }
 
         try {
-            ListMedia list = new XPLMediaLoader().loadListFromXPL(args[0]);
+            ListMedia list = new XPLPlaylistLoader().loadListFromXPL(args[0]);
 
             PlayerModel model = new StdPlayerModel(list);
             ConsolePlayer player = new ConsolePlayer(model, false);
             player.run();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 }

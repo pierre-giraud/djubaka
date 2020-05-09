@@ -2,7 +2,7 @@ package file;
 
 import media.MediaBuilder;
 import media.StdMediaBuilder;
-import exceptions.BadFileExtensionException;
+import exceptions.BadPlaylistFileTypeException;
 import media.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -11,16 +11,16 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 
-public class XPLMediaLoader {
+public class XPLPlaylistLoader {
 
     private MediaBuilder builder;
 
-    public XPLMediaLoader(){
+    public XPLPlaylistLoader(){
         builder = new StdMediaBuilder();
     }
 
     public ListMedia loadListFromXPL(String filename) throws Exception {
-        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
+        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadPlaylistFileTypeException("This file type is not supported");
 
         InputSource is = new InputSource(new BufferedInputStream(new FileInputStream(filename)));
         SAXParserFactory spf = SAXParserFactory.newInstance();

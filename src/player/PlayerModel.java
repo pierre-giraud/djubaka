@@ -5,11 +5,11 @@ import media.Media;
 import observable.Observable;
 
 public interface PlayerModel extends Observable {
-    void startPlaylist();
-    void goToNextMedia(Media media);
-    void goToPreviousMedia(Media media);
-    void goToNextParentMedia();
-    void goToPreviousParentMedia();
+    void startPlaylist() throws Exception;
+    void goToNextMedia(Media media) throws Exception;
+    void goToPreviousMedia(Media media) throws Exception;
+    void goToNextParentMedia() throws Exception;
+    void goToPreviousParentMedia() throws Exception;
     Media getCurrentMedia();
     Media getCurrentMediaInfo();
     void setCurrentMediaInfo(Media m);

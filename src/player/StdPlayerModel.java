@@ -1,5 +1,6 @@
 package player;
 
+import file.MediaFileLoader;
 import media.ListMedia;
 import media.Media;
 import observable.ObservableSubject;
@@ -22,7 +23,7 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
     }
 
     @Override
-    public void startPlaylist() {
+    public void startPlaylist() throws Exception {
         if (currentList.getChildren().size() == 0) throw new NullPointerException("This playlist has no media");
         Media m = currentList.getChild(0);
 
@@ -32,11 +33,12 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
         }
 
         currentMedia = m;
+        currentMediaInfo = MediaFileLoader.loadRealMediaFromFile(currentMedia.getName());
         fireStateChanged();
     }
 
     @Override
-    public void goToNextMedia(Media media) {
+    public void goToNextMedia(Media media) throws Exception {
         if (currentMedia == null) throw new NullPointerException("Playlist not started");
 
         int index = currentList.getChildren().indexOf(media);
@@ -50,6 +52,7 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
             }
 
             currentMedia = m;
+            currentMediaInfo = MediaFileLoader.loadRealMediaFromFile(currentMedia.getName());
             fireStateChanged();
         } else if (currentList.getParent() != null){
             ListMedia l = currentList;
@@ -62,7 +65,7 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
     }
 
     @Override
-    public void goToPreviousMedia(Media media) {
+    public void goToPreviousMedia(Media media) throws Exception {
         if (currentMedia == null) throw new NullPointerException("Playlist not started");
 
         int index = currentList.getChildren().indexOf(media);
@@ -76,6 +79,7 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
             }
 
             currentMedia = m;
+            currentMediaInfo = MediaFileLoader.loadRealMediaFromFile(currentMedia.getName());
             fireStateChanged();
         } else if (currentList.getParent() != null){
             ListMedia l = currentList;
@@ -85,7 +89,7 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
     }
 
     @Override
-    public void goToNextParentMedia() {
+    public void goToNextParentMedia() throws Exception {
         if (currentMedia == null) throw new NullPointerException("Playlist not started");
 
         if (currentList.getParent() != null) {
@@ -99,7 +103,7 @@ public class StdPlayerModel extends ObservableSubject implements PlayerModel {
     }
 
     @Override
-    public void goToPreviousParentMedia() {
+    public void goToPreviousParentMedia() throws Exception {
         if (currentMedia == null) throw new NullPointerException("Playlist not started");
 
         if (currentList.getParent() != null){

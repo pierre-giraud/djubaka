@@ -1,7 +1,7 @@
 package timer;
 
 import exceptions.MediaTimerAlreadyDefinedException;
-import exceptions.MediaTimerException;
+import exceptions.MediaTimerStateException;
 import exceptions.UndefinedMediaTimerException;
 import observable.ObservableSubject;
 
@@ -40,8 +40,8 @@ public class StdMediaTimer extends ObservableSubject implements MediaTimer {
     }
 
     @Override
-    public void start() throws MediaTimerException {
-        if (state != TimerState.NOT_STARTED) throw new MediaTimerException("The timer is already running");
+    public void start() throws MediaTimerStateException {
+        if (state != TimerState.NOT_STARTED) throw new MediaTimerStateException("The timer is already running");
 
         time = -1;
         timer = new Timer();
@@ -51,8 +51,8 @@ public class StdMediaTimer extends ObservableSubject implements MediaTimer {
     }
 
     @Override
-    public void restart() throws MediaTimerException {
-        if (state == TimerState.NOT_STARTED) throw new MediaTimerException("The timer has not been initialized");
+    public void restart() throws MediaTimerStateException {
+        if (state == TimerState.NOT_STARTED) throw new MediaTimerStateException("The timer has not been initialized");
 
         timer.cancel();
         time = -1;
@@ -63,16 +63,16 @@ public class StdMediaTimer extends ObservableSubject implements MediaTimer {
     }
 
     @Override
-    public void pause() throws MediaTimerException {
-        if (state != TimerState.RUNNING) throw new MediaTimerException("The timer is not running");
+    public void pause() throws MediaTimerStateException {
+        if (state != TimerState.RUNNING) throw new MediaTimerStateException("The timer is not running");
 
         timer.cancel();
         state = TimerState.PAUSED;
     }
 
     @Override
-    public void resume() throws MediaTimerException {
-        if (state != TimerState.PAUSED) throw new MediaTimerException("The timer has not been paused");
+    public void resume() throws MediaTimerStateException {
+        if (state != TimerState.PAUSED) throw new MediaTimerStateException("The timer has not been paused");
 
         timer = new Timer();
         task = new Task();
@@ -80,8 +80,8 @@ public class StdMediaTimer extends ObservableSubject implements MediaTimer {
     }
 
     @Override
-    public void stop() throws MediaTimerException {
-        if (state == TimerState.NOT_STARTED) throw new MediaTimerException("No timer to stop");
+    public void stop() throws MediaTimerStateException {
+        if (state == TimerState.NOT_STARTED) throw new MediaTimerStateException("No timer to stop");
 
         timer.cancel();
         state = TimerState.NOT_STARTED;

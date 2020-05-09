@@ -1,7 +1,7 @@
 import exceptions.MediaTimerAlreadyDefinedException;
 import exceptions.UndefinedMediaTimerException;
 import file.MediaFileLoader;
-import file.XPLMediaLoader;
+import file.XPLPlaylistLoader;
 import media.ListMedia;
 import media.Media;
 import player.PlayerModel;
@@ -140,11 +140,8 @@ public class GraphicPlayer {
                 try {
                     if (!model.isFinished()){
                         if (timer.getState() != TimerState.NOT_STARTED) timer.stop();
-                        Media media = MediaFileLoader.loadRealMediaFromFile(model.getCurrentMedia().getName());
-                        model.setCurrentMediaInfo(media);
-
-                        currentMedia.setText(media.toString());
-                        progressBar.setMaximum(media.getDuration());
+                        currentMedia.setText(model.getCurrentMediaInfo().toString());
+                        progressBar.setMaximum(model.getCurrentMediaInfo().getDuration());
 
                         if (timer.getState() == TimerState.NOT_STARTED) timer.start();
                     } else {
@@ -154,7 +151,7 @@ public class GraphicPlayer {
                         progressBar.setString("0 / 0 sec");
                     }
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         };
@@ -172,7 +169,7 @@ public class GraphicPlayer {
                         model.goToNextMedia(model.getCurrentMedia());
                     }
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         };
@@ -192,7 +189,7 @@ public class GraphicPlayer {
                     nextParentMediaBtn.setEnabled(true);
                     previousParentMediaBtn.setEnabled(true);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         });
@@ -206,7 +203,7 @@ public class GraphicPlayer {
                     pauseBtn.setEnabled(false);
                     resumeBtn.setEnabled(true);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         });
@@ -220,7 +217,7 @@ public class GraphicPlayer {
                     pauseBtn.setEnabled(true);
                     resumeBtn.setEnabled(false);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         });
@@ -234,7 +231,7 @@ public class GraphicPlayer {
                     if (!pauseBtn.isEnabled()) pauseBtn.setEnabled(true);
                     if (resumeBtn.isEnabled()) resumeBtn.setEnabled(false);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
 
             }
@@ -249,7 +246,7 @@ public class GraphicPlayer {
                     if (!pauseBtn.isEnabled()) pauseBtn.setEnabled(true);
                     if (resumeBtn.isEnabled()) resumeBtn.setEnabled(false);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         });
@@ -263,7 +260,7 @@ public class GraphicPlayer {
                     if (!pauseBtn.isEnabled()) pauseBtn.setEnabled(true);
                     if (resumeBtn.isEnabled()) resumeBtn.setEnabled(false);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         });
@@ -277,7 +274,7 @@ public class GraphicPlayer {
                     if (!pauseBtn.isEnabled()) pauseBtn.setEnabled(true);
                     if (resumeBtn.isEnabled()) resumeBtn.setEnabled(false);
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName() + " : " + e.getMessage());
                 }
             }
         });
@@ -309,7 +306,7 @@ public class GraphicPlayer {
         }
 
         try {
-            ListMedia list = new XPLMediaLoader().loadListFromXPL(filename);
+            ListMedia list = new XPLPlaylistLoader().loadListFromXPL(filename);
             PlayerModel model = new StdPlayerModel(list);
 
             SwingUtilities.invokeLater(new Runnable() {
@@ -324,7 +321,7 @@ public class GraphicPlayer {
                 new ConsolePlayer(model, true);
             }
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 }

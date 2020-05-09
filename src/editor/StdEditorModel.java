@@ -4,8 +4,8 @@ import exceptions.BadMediaTypeException;
 import file.MediaFileLoader;
 import media.Media;
 import media.ListMedia;
-import file.XPLMediaLoader;
-import file.XPLMediaSaver;
+import file.XPLPlaylistLoader;
+import file.XPLPlaylistSaver;
 import observable.ObservableSubject;
 
 import java.io.File;
@@ -15,11 +15,11 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
     private ListMedia listMedia;
     private ListMedia currentList;
 
-    private XPLMediaLoader mediaLoader;
+    private XPLPlaylistLoader mediaLoader;
 
     public StdEditorModel(){
         super();
-        mediaLoader = new XPLMediaLoader();
+        mediaLoader = new XPLPlaylistLoader();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
 
     @Override
     public void savePlaylist(String filename) throws Exception {
-        XPLMediaSaver.saveXPL(filename, listMedia);
+        XPLPlaylistSaver.saveXPL(filename, listMedia);
     }
 
     @Override

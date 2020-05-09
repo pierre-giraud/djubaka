@@ -1,25 +1,38 @@
 package file;
 
-import exceptions.BadFileExtensionException;
-import media.ListMedia;
-import media.MediaVisitor;
+import media.*;
 
-import java.io.File;
 import java.io.PrintStream;
 
-public class XPLMediaSaver {
-    public static void saveXPL(String filename, ListMedia list) throws Exception {
-        if (!filename.substring(filename.length() - 4).equals(".xpl")) throw new BadFileExtensionException("This file type is not supported");
+public class XPLMediaSaver implements MediaVisitor {
 
-        PrintStream stream = new PrintStream(new File(filename));
-        MediaVisitor visitor = new XPLMediaSaverVisitor(stream);
+    private PrintStream stream;
 
-        stream.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        stream.append("<!DOCTYPE playlist SYSTEM \"resources/playlist.dtd\">\n");
-        stream.append("<playlist>\n");
+    public XPLMediaSaver(PrintStream stream){
+        this.stream = stream;
+    }
 
-        list.accept(visitor);
+    @Override
+    public void visitMedia(StdMedia m) {
+        stream.append("<media duration=\"").append(String.valueOf(m.getDuration())).append("\">\n");
+        stream.append("\t<name>").append(m.getName()).append("</name>\n");
+        stream.append("</media>\n");
+    }
 
-        stream.append("</playlist>");
+    @Override
+    public void visitMusic(StdMusic m) {
+        throw new UnsupportedOperationException("This method is not supported");
+    }
+
+    @Override
+    public void visitVideo(StdVideo v) {
+        throw new UnsupportedOperationException("This method is not supported");
+    }
+
+    @Override
+    public void visitList(ListMedia p) {
+        stream.append("<list name=\"").append(p.getName()).append("\">\n");
+        for (Media m : p.getChildren()){ m.accept(this); }
+        stream.append("</list>\n");
     }
 }
