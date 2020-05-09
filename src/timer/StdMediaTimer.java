@@ -77,6 +77,7 @@ public class StdMediaTimer extends ObservableSubject implements MediaTimer {
         timer = new Timer();
         task = new Task();
         timer.scheduleAtFixedRate(task, 0, 1000);
+        state = TimerState.RUNNING;
     }
 
     @Override
