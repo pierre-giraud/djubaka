@@ -39,6 +39,8 @@ public class StdEditorModel extends ObservableSubject implements EditorModel {
 
     @Override
     public void savePlaylist(String filename) throws Exception {
+        if (listMedia == null) throw new NullPointerException("Cannot save : No playlist has been created");
+        if (listMedia.getChildren().size() == 0) throw new NullPointerException("Cannot save : The playlist is empty");
         XPLPlaylistSaver.saveXPL(filename, listMedia);
     }
 

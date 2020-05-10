@@ -1,7 +1,7 @@
 <?file version="1.0" encoding="UTF-8"?>
-<!ELEMENT playlist (media|list)*>
+<!ELEMENT playlist (list)>
 
-<!ELEMENT list (media|list)*>
+<!ELEMENT list (media|list)+>
     <!ATTLIST list name CDATA #REQUIRED>
 
 <!ELEMENT media (name)>

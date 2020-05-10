@@ -1,7 +1,6 @@
 package media;
 
 import exceptions.InvalidBuilderOperationException;
-import media.ListMedia;
 
 public interface MediaBuilder {
     void startMedia() throws InvalidBuilderOperationException;
