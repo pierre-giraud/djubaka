@@ -22,3 +22,8 @@ Les designs patterns utilisés sont :
 - Visiteur
 - Singleton
 - Observateur
+
+Ce projet se décompose en trois programmes principaux :
+- Editor.java : permet de créer et d'enregistrer une playlist à partir de fichiers .mta et .mtv
+- ConsolePlayer.java : permet d'effectuer la lecture d'une playlist en mode console
+- GraphicPlayer.java : permet d'effectuer la lecture d'une playlist avec une interface utilisateur
